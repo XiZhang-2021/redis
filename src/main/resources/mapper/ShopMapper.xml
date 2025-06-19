@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hmdp.mapper.ShopMapper">
+
+    <!-- 自定义：按距离排序并分页 -->
+    <select id="selectByDistance" resultType="com.hmdp.dto.ShopDTO">
+        SELECT  id, type_id, x, y,
+                6371000 * 2 * ASIN(
+                        SQRT(
+                                POW(SIN(RADIANS(y - #{lat})/2), 2) +
+                                COS(RADIANS(#{lat})) *
+                                COS(RADIANS(y)) *
+                                POW(SIN(RADIANS(x - #{lng})/2), 2)
+                        )
+                              ) AS distance
+        FROM    tb_shop
+        WHERE   type_id = #{typeId}
+          AND   6371000 * 2 * ASIN(
+                SQRT(
+                        POW(SIN(RADIANS(y - #{lat})/2), 2) +
+                        COS(RADIANS(#{lat})) *
+                        COS(RADIANS(y)) *
+                        POW(SIN(RADIANS(x - #{lng})/2), 2)
+                )
+                              ) &lt;= #{radius}
+        ORDER BY distance
+            LIMIT  #{offset}, #{pageSize}
+    </select>
+
+</mapper>

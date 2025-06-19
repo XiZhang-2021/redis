@@ -78,7 +78,7 @@ public class CacheClient {
         // 1.从redis查询商铺缓存
         String json = stringRedisTemplate.opsForValue().get(key);
         // 2.判断是否存在
-        if (StrUtil.isBlank(json)) {
+        if (!StrUtil.isBlank(json)) {
             // 3.存在，直接返回
             return null;
         }
