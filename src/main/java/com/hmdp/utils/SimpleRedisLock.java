@@ -37,26 +37,16 @@ public class SimpleRedisLock implements ILock {
         //返回
         return Boolean.TRUE.equals(success); //nil will return false, this will avoid nullpointerexception
 
-
-        //----------------------------------------
-//        // 获取线程标示
-//        String threadId = ID_PREFIX + Thread.currentThread().getId();
-//        // 获取锁
-//        Boolean success = stringRedisTemplate.opsForValue()
-//                .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);
-//        return Boolean.TRUE.equals(success);
-        //----------------------------------------
     }
 
     @Override
     public void unlock() {
-        //----------------------------------------
         // 调用lua脚本
         stringRedisTemplate.execute(
                 UNLOCK_SCRIPT,
                 Collections.singletonList(KEY_PREFIX + name),
                 ID_PREFIX + Thread.currentThread().getId());
-        //----------------------------------------
+
     }
 
 
